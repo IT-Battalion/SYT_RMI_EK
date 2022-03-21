@@ -11,7 +11,7 @@ task engine(type: JavaExec) {
 // e.g.: gradle compute --args="localhost 1234"
 task compute(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'client.ComputePi'
+    main = 'client.ComputeTasks'
 }
 
 dependencies {
