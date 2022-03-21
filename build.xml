@@ -54,7 +54,7 @@
         </java>
     </target>
     <target depends="build" name="compute">
-        <java classname="client.ComputePi" failonerror="true" fork="yes">
+        <java classname="client.ComputeTasks" failonerror="true" fork="yes">
 	    <arg value="localhost"/>
 	    <arg value="2000"/>
             <classpath refid="rmiRemote.classpath"/>

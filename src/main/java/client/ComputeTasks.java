@@ -36,7 +36,7 @@ import java.rmi.registry.Registry;
 import java.math.BigDecimal;
 import compute.Compute;
 
-public class ComputePi {
+public class ComputeTasks {
     public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
