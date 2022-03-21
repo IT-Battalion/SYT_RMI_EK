@@ -46,11 +46,16 @@ public class ComputeTasks {
             String name = "Compute";
             Registry registry = LocateRegistry.getRegistry(args[0]);
             Compute comp = (Compute) registry.lookup(name);
+
             Pi task = new Pi(Integer.parseInt(args[1]));
             BigDecimal pi = comp.executeTask(task);
             System.out.println(pi);
+
+            Fibonacci task2 = new Fibonacci(Integer.parseInt(args[1]));
+            Long fibonacci = comp.executeTask(task2);
+            System.out.println(fibonacci);
         } catch (Exception e) {
-            System.err.println("ComputePi exception:");
+            System.err.println("ComputeTasks exception:");
             e.printStackTrace();
         }
     }    
