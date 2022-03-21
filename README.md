@@ -58,7 +58,11 @@ public class TestPermissions {
 ```
 Da es zuerst nicht funktioniert hat, habe ich eine neue Security Policy angelegt. Danach hat alles einwandfrei funktioniert.
 
+Anschließend habe ich die Klasse ComputePi in ComputeTasks umbenannt. Daher musste auch in der build.gradle der compute Tasks geändert werden, was ich zuerster vergessen habe. 
+Danach habe ich das Program getestet und es ist problemlos gelaufen.
 
+Nun habe ich mich an das "saubere Schließen" gesetzt.
+Dafür habe ich im Compute Interface eine neue Methode definiert die für das herunterfahren des Servers gedacht ist. Diese habe ich dann implementiert und auf der Client seite, nachdem alle Berechnungen durchgeführt wurden aufgerufen. Anschließend habe ich das Programm nochmals getestet. Wieder hat es problemlos funktioniert und der Server wird nach den Berechnungen herunter gefahren.
 
 ## Quellen
 [1] "Fibonacci Number Program"; wikibooks; zuletzt besucht am 21.03.2022; https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Fibonacci_Number_Program

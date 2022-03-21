@@ -27,17 +27,25 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 package engine;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.CompletableFuture;
+
 import compute.Compute;
 import compute.Task;
 
 public class ComputeEngine implements Compute {
+
+    private static Registry registry;
+    private static final String name = "Compute";
+    private static Compute engine;
 
     public ComputeEngine() {
         super();
@@ -52,16 +60,22 @@ public class ComputeEngine implements Compute {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            String name = "Compute";
-            Compute engine = new ComputeEngine();
+            engine = new ComputeEngine();
             Compute stub =
-                (Compute) UnicastRemoteObject.exportObject(engine, 0);
-            Registry registry = LocateRegistry.createRegistry(1099);
+                    (Compute) UnicastRemoteObject.exportObject(engine, 0);
+            registry = LocateRegistry.createRegistry(1099);
             registry.rebind(name, stub);
             System.out.println("ComputeEngine bound");
         } catch (Exception e) {
             System.err.println("ComputeEngine exception:");
             e.printStackTrace();
         }
+    }
+
+    public void shutdownEngine() throws NotBoundException, RemoteException {
+        System.out.println("ComputeEngine shutdown");
+        registry.unbind(name);
+        UnicastRemoteObject.unexportObject(engine, false);
+        System.exit(0);
     }
 }
