@@ -71,6 +71,7 @@ Die Balancing Method wurde mittels Interface realisiert um auch andere Balancing
 
 Das ausführen von Tasks und das Balancing hat danach bereits ausgezeichnet funktioniert. Jedoch gab es beim "sauberen schließen" der Server über den Balancer ein Problem.
 
+Nachdem ich für die ArrayList eine ThreadSafe liste verwendet habe, und die register/unregister Methode synchronized habe, hat dann alles funktioniert. Am Ende habe ich noch mittels System.in (build.gradle) einen exit command eingebaut, mit welchem man ganz einfach die einzelnen Server & den LoadBalancer herunterfahren kann.
 
 ## Quellen
 [1] "Fibonacci Number Program"; wikibooks; zuletzt besucht am 21.03.2022; https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Fibonacci_Number_Program
