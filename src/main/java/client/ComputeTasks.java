@@ -62,12 +62,6 @@ public class ComputeTasks {
         } catch (Exception e) {
             System.err.println("ComputeTasks exception:");
             e.printStackTrace();
-        } finally {
-            try {
-                comp.shutdownEngine();
-            } catch (NotBoundException | RemoteException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
