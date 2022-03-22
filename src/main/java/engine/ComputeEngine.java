@@ -31,26 +31,21 @@
 
 package engine;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import compute.Balance;
+import compute.Compute;
+import compute.Task;
+
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.CompletableFuture;
-
-import compute.Balance;
-import compute.Compute;
-import compute.Task;
 
 public class ComputeEngine implements Compute, Serializable {
 
     private static Registry registry;
     private static Balance balance;
-    //private static boolean exit = false;
 
     private final String realName;
 
@@ -74,8 +69,7 @@ public class ComputeEngine implements Compute, Serializable {
             if (registry == null) registry = LocateRegistry.getRegistry(args[0]);
             if (balance == null) balance = (Balance) registry.lookup(name);
             Compute engine = new ComputeEngine(name + args[1]);
-            Compute stub =
-                    (Compute) UnicastRemoteObject.exportObject(engine, Integer.parseInt(args[1]));
+            Compute stub = (Compute) UnicastRemoteObject.exportObject(engine, Integer.parseInt(args[1]));
 
             registry.rebind(name + args[1], stub);
             balance.register(name + args[1]);
@@ -91,12 +85,9 @@ public class ComputeEngine implements Compute, Serializable {
     }
 
     @Override
-    public void shutdownEngine() throws NotBoundException, RemoteException {
+    public void shutdownEngine() throws RemoteException, NotBoundException {
         System.out.println("ComputeEngine shutdown");
         balance.unregister(this.realName);
-        registry.unbind(this.realName);
-        UnicastRemoteObject.unexportObject(this, false);
-        //exit = true;
-        //System.exit(0);
+        UnicastRemoteObject.unexportObject(this, true);
     }
 }

@@ -59,6 +59,7 @@ public class ComputeTasks {
             Fibonacci task2 = new Fibonacci(Integer.parseInt(args[1]));
             Long fibonacci = comp.executeTask(task2);
             System.out.println(fibonacci);
+            comp.shutdownEngine();
         } catch (Exception e) {
             System.err.println("ComputeTasks exception:");
             e.printStackTrace();

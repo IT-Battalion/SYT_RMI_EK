@@ -6,8 +6,6 @@ import compute.Task;
 import loadbalancer.balance.BalanceMethod;
 import loadbalancer.balance.RoundRobin;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,9 +13,10 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BalanceComputing implements Balance {
-    private static final List<Compute> servers = new ArrayList<>();
+    private static final List<Compute> servers = new CopyOnWriteArrayList<>();
     private static Registry registry;
     private static final String name = "Compute";
     private static final BalanceMethod balancerMethod = new RoundRobin();
@@ -46,13 +45,13 @@ public class BalanceComputing implements Balance {
     }
 
     @Override
-    public void register(String engine) throws NotBoundException, RemoteException {
+    public synchronized void register(String engine) throws NotBoundException, RemoteException {
         System.out.println("Register Engine: " + (servers.size() + 1));
         servers.add((Compute) registry.lookup(engine));
     }
 
     @Override
-    public void unregister(String engine) throws NotBoundException, RemoteException {
+    public synchronized void unregister(String engine) throws NotBoundException, RemoteException {
         Compute comp = (Compute) registry.lookup(engine);
         if (servers.contains(comp)) {
             System.out.println("Unregister Engine: " + (servers.size() - 1));
@@ -75,8 +74,8 @@ public class BalanceComputing implements Balance {
                 servers) {
             engine.shutdownEngine();
         }
-        registry.unbind(name);
-        UnicastRemoteObject.unexportObject(this, false);
+        System.out.println("Load Balancer Shutdown");
+        UnicastRemoteObject.unexportObject(this, true);
         //System.exit(0);
     }
 }
