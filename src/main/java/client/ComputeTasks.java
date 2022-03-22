@@ -27,25 +27,28 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 package client;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.math.BigDecimal;
+
 import compute.Compute;
 
 public class ComputeTasks {
+    private static Compute comp;
+
     public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-        	// Hier ist was ganz wichtiges
+            // Hier ist was ganz wichtiges
             String name = "Compute";
             Registry registry = LocateRegistry.getRegistry(args[0]);
-            Compute comp = (Compute) registry.lookup(name);
+            comp = (Compute) registry.lookup(name);
 
             Pi task = new Pi(Integer.parseInt(args[1]));
             BigDecimal pi = comp.executeTask(task);
@@ -54,11 +57,11 @@ public class ComputeTasks {
             Fibonacci task2 = new Fibonacci(Integer.parseInt(args[1]));
             Long fibonacci = comp.executeTask(task2);
             System.out.println(fibonacci);
-
-            comp.shutdownEngine();
         } catch (Exception e) {
             System.err.println("ComputeTasks exception:");
             e.printStackTrace();
+        } finally {
+            comp.shutdownEngine();
         }
-    }    
+    }
 }
