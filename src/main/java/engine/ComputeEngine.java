@@ -31,6 +31,10 @@
 
 package engine;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -38,20 +42,26 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.CompletableFuture;
 
+import compute.Balance;
 import compute.Compute;
 import compute.Task;
 
-public class ComputeEngine implements Compute {
+public class ComputeEngine implements Compute, Serializable {
 
     private static Registry registry;
-    private static final String name = "Compute";
-    private static Compute engine;
+    private static Balance balance;
+    //private static boolean exit = false;
 
-    public ComputeEngine() {
+    private final String realName;
+
+    public ComputeEngine(String name) {
         super();
+        this.realName = name;
     }
 
+    @Override
     public <T> T executeTask(Task<T> t) {
+        System.out.println("Executing Task");
         return t.execute();
     }
 
@@ -60,22 +70,33 @@ public class ComputeEngine implements Compute {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            engine = new ComputeEngine();
+            String name = "Compute";
+            if (registry == null) registry = LocateRegistry.getRegistry(args[0]);
+            if (balance == null) balance = (Balance) registry.lookup(name);
+            Compute engine = new ComputeEngine(name + args[1]);
             Compute stub =
-                    (Compute) UnicastRemoteObject.exportObject(engine, 0);
-            registry = LocateRegistry.createRegistry(1099);
-            registry.rebind(name, stub);
+                    (Compute) UnicastRemoteObject.exportObject(engine, Integer.parseInt(args[1]));
+
+            registry.rebind(name + args[1], stub);
+            balance.register(name + args[1]);
+
             System.out.println("ComputeEngine bound");
+
+            //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            //while (!reader.readLine().equalsIgnoreCase("exit") || exit);
         } catch (Exception e) {
             System.err.println("ComputeEngine exception:");
             e.printStackTrace();
         }
     }
 
+    @Override
     public void shutdownEngine() throws NotBoundException, RemoteException {
         System.out.println("ComputeEngine shutdown");
-        registry.unbind(name);
-        UnicastRemoteObject.unexportObject(engine, false);
-        System.exit(0);
+        balance.unregister(this.realName);
+        registry.unbind(this.realName);
+        UnicastRemoteObject.unexportObject(this, false);
+        //exit = true;
+        //System.exit(0);
     }
 }

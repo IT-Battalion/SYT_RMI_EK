@@ -3,15 +3,25 @@ plugins {
     id 'application'
 }
 
+// e.g.: gradle engine --args="localhost 1097"
+// e.g.: gradle engine --args="localhost 1098"
 task engine(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'engine.ComputeEngine'
+    standardInput = System.in
 }
 
 // e.g.: gradle compute --args="localhost 1234"
 task compute(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'client.ComputeTasks'
+    standardInput = System.in
+}
+
+task balance(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'loadbalancer.BalanceComputing'
+    standardInput = System.in
 }
 
 dependencies {

@@ -45,7 +45,7 @@ The Remote interface serves to identify interfaces whose methods may be invoked 
 Implementation classes can implement any number of remote interfaces and can extend other remote implementation classes. RMI provides some convenience classes that remote object implementations can extend which facilitate remote object creation. These classes are java.rmi.server.UnicastRemoteObject and java.rmi.activation.Activatable.
 
 ## Was ist bei der Weitergabe von Objekten unabdingbar?
-Das Objekt muss Serializable sein und daher auch das Interface `Serializable` implementieren.
+Das Objekt muss Serializable sein und daher auch das Interface `Serializable` implementieren. Außerdem müssen alle Methoden des Objektes `RemoteException` werfen können.
 
 ## Welche Methoden des UnicastRemoteObject kommen bei der Server-Implementierung zum Einsatz?
 Das Unicast Remote Objekt ist die Oberklasse für alle RMI Implementationsklassen. [2]

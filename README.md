@@ -64,5 +64,13 @@ Danach habe ich das Program getestet und es ist problemlos gelaufen.
 Nun habe ich mich an das "saubere Schließen" gesetzt.
 Dafür habe ich im Compute Interface eine neue Methode definiert die für das herunterfahren des Servers gedacht ist. Diese habe ich dann implementiert und auf der Client seite, nachdem alle Berechnungen durchgeführt wurden aufgerufen. Anschließend habe ich das Programm nochmals getestet. Wieder hat es problemlos funktioniert und der Server wird nach den Berechnungen herunter gefahren.
 
+Nun habe ich die Implementierung des LoadBalancers begonnen. Zuerst habe ich ein neues Interface `Balance` erstellt, welches Compute extended. In diesem habe ich dann zwei neue Methoden (`register`, `unregister`) erstellt.
+Danach habe ich die Klasse BalanceComputing erstellt und einen neuen task im `build.gradle` erstellt. Dort habe ich dann das neue Interface implementiert. 
+ComputeEngine wurde dann so abgeändert, dass sie die Tasks vom Balancer erhält und sich beim starten registriert, bzw. beim stoppen unregistert. 
+Die Balancing Method wurde mittels Interface realisiert um auch andere Balancing methoden optimal implementieren zu können.
+
+Das ausführen von Tasks und das Balancing hat danach bereits ausgezeichnet funktioniert. Jedoch gab es beim "sauberen schließen" der Server über den Balancer ein Problem.
+
+
 ## Quellen
 [1] "Fibonacci Number Program"; wikibooks; zuletzt besucht am 21.03.2022; https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Fibonacci_Number_Program
