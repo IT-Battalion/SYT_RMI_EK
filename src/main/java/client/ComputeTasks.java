@@ -31,6 +31,8 @@
 
 package client;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.math.BigDecimal;
@@ -61,7 +63,11 @@ public class ComputeTasks {
             System.err.println("ComputeTasks exception:");
             e.printStackTrace();
         } finally {
-            comp.shutdownEngine();
+            try {
+                comp.shutdownEngine();
+            } catch (NotBoundException | RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
