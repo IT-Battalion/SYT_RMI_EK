@@ -62,3 +62,4 @@ Die exportierten Objekte müssen "unexportiert" werden und die Registry "unbinde
 ## Quellen
 [1] "Wikipedia"; "Remote Method Invocation"; zuletzt besucht am 21.03.2022; https://de.wikipedia.org/wiki/Remote_Method_Invocation
 [2] "joller-voss"; "RMI Uebersicht und Einfuehrung"; zuletzt besucht am 21.03.2022; http://www.joller-voss.ch/ndkjava/notes/rmi/RMI_Uebersicht_und_Einfuehrung.pdf
+[3] "tutorialspoint"; "Java RMI Introduction"; zuletzt besucht am 22.03.2022; https://www.tutorialspoint.com/java_rmi/java_rmi_introduction.htm
