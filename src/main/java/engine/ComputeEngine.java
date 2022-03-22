@@ -35,6 +35,8 @@ import compute.Balance;
 import compute.Compute;
 import compute.Task;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -76,8 +78,9 @@ public class ComputeEngine implements Compute, Serializable {
 
             System.out.println("ComputeEngine bound");
 
-            //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            //while (!reader.readLine().equalsIgnoreCase("exit") || exit);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            while (!reader.readLine().equalsIgnoreCase("exit")) {}
+            engine.shutdownEngine();
         } catch (Exception e) {
             System.err.println("ComputeEngine exception:");
             e.printStackTrace();

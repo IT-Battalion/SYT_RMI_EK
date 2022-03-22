@@ -6,6 +6,8 @@ import compute.Task;
 import loadbalancer.balance.BalanceMethod;
 import loadbalancer.balance.RoundRobin;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -35,8 +37,9 @@ public class BalanceComputing implements Balance {
             registry.rebind(name, stub);
             System.out.println("LoadBalancer bound");
 
-            //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            //while (!reader.readLine().equalsIgnoreCase("exit"));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            while (!reader.readLine().equalsIgnoreCase("exit")) {}
+            balancer.shutdownEngine();
         } catch (Exception e) {
             System.err.println("LoadBalancer exception:");
             e.printStackTrace();
