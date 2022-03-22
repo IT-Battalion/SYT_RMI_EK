@@ -32,6 +32,8 @@
 package client;
 
 import compute.Compute;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
@@ -39,6 +41,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ComputeTasks {
+    public static Logger log = LogManager.getLogger(ComputeTasks.class);
 
     public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
@@ -57,14 +60,14 @@ public class ComputeTasks {
 
             Pi task = new Pi(Integer.parseInt(args[1]));
             BigDecimal pi = comp.executeTask(task);
-            System.out.println(pi == null ? "No Servers were online." : pi);
+            log.info(pi == null ? "No Servers were online." : pi);
 
             Fibonacci task2 = new Fibonacci(Integer.parseInt(args[1]));
             Long fibonacci = comp.executeTask(task2);
-            System.out.println(fibonacci == null ? "No Servers were online." : fibonacci);
+            log.info(fibonacci == null ? "No Servers were online." : fibonacci);
             //comp.shutdownEngine();
         } catch (Exception e) {
-            System.err.println("ComputeTasks exception:");
+            log.error("ComputeTasks exception:");
             e.printStackTrace();
         }
     }

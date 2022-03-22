@@ -34,6 +34,8 @@ package engine;
 import compute.Balance;
 import compute.Compute;
 import compute.Task;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -62,6 +64,8 @@ public class ComputeEngine implements Compute, Serializable {
         return t.execute();
     }
 
+    public static Logger log = LogManager.getLogger(ComputeEngine.class);
+
     public static void main(String[] args) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -76,20 +80,20 @@ public class ComputeEngine implements Compute, Serializable {
             registry.rebind(name + args[1], stub);
             balance.register(name + args[1]);
 
-            System.out.println("ComputeEngine bound");
+            log.info("ComputeEngine bound");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             while (!reader.readLine().equalsIgnoreCase("exit")) {}
             engine.shutdownEngine();
         } catch (Exception e) {
-            System.err.println("ComputeEngine exception:");
+            log.error("ComputeEngine exception:");
             e.printStackTrace();
         }
     }
 
     @Override
     public void shutdownEngine() throws RemoteException, NotBoundException {
-        System.out.println("ComputeEngine shutdown");
+        log.info("ComputeEngine shutdown");
         balance.unregister(this.realName);
         UnicastRemoteObject.unexportObject(this, true);
     }

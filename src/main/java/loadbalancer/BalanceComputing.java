@@ -6,6 +6,8 @@ import compute.Task;
 import engine.ComputeEngine;
 import loadbalancer.balance.BalanceMethod;
 import loadbalancer.balance.RoundRobin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,7 +16,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -28,6 +29,8 @@ public class BalanceComputing implements Balance {
         super();
     }
 
+    public static Logger log = LogManager.getLogger(BalanceComputing.class);
+
     public static void main(String[] args) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -37,20 +40,21 @@ public class BalanceComputing implements Balance {
             Compute stub = (Compute) UnicastRemoteObject.exportObject(balancer, 0);
             registry = LocateRegistry.createRegistry(1099);
             registry.rebind(name, stub);
-            System.out.println("LoadBalancer bound");
+            log.info("LoadBalancer bound");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            while (!reader.readLine().equalsIgnoreCase("exit")) {}
+            while (!reader.readLine().equalsIgnoreCase("exit")) {
+            }
             balancer.shutdownEngine();
         } catch (Exception e) {
-            System.err.println("LoadBalancer exception:");
+            log.error("LoadBalancer exception:");
             e.printStackTrace();
         }
     }
 
     @Override
     public synchronized void register(String engine) throws NotBoundException, RemoteException {
-        System.out.println("Register Engine: " + (servers.size() + 1));
+        log.info("Register Engine: " + (servers.size() + 1));
         servers.add((Compute) registry.lookup(engine));
     }
 
@@ -58,7 +62,7 @@ public class BalanceComputing implements Balance {
     public synchronized void unregister(String engine) throws NotBoundException, RemoteException {
         Compute comp = (Compute) registry.lookup(engine);
         if (servers.contains(comp)) {
-            System.out.println("Unregister Engine: " + (servers.size() - 1));
+            log.info("Unregister Engine: " + (servers.size() - 1));
             servers.remove(comp);
             registry.unbind(engine);
         } else {
@@ -69,22 +73,22 @@ public class BalanceComputing implements Balance {
     @Override
     public <T> T executeTask(Task<T> t) throws RemoteException {
         if (servers.isEmpty()) {
-            System.err.println("No Servers online.");
+            log.error("No Servers online.");
             return null;
         }
         Compute ce = balancerMethod.getExecutionServer(servers);
-        System.out.println("Executing Task on " + servers.indexOf(ce));
+        log.info("Executing Task on " + servers.indexOf(ce));
         try {
             ce.ping();
         } catch (RemoteException ex) {
-            System.out.println("Ping hat nicht geantwortet.");
+            log.warn("Ping hat nicht geantwortet.");
             try {
-                unregister(((ComputeEngine)ce).getRealName());
+                unregister(((ComputeEngine) ce).getRealName());
             } catch (NotBoundException e) {
                 e.printStackTrace();
             }
             if (servers.isEmpty()) {
-                System.err.println("No Servers online.");
+                log.error("No Servers online.");
                 return null;
             }
             ce = balancerMethod.getExecutionServer(servers);
@@ -98,9 +102,8 @@ public class BalanceComputing implements Balance {
                 servers) {
             engine.shutdownEngine();
         }
-        System.out.println("Load Balancer Shutdown");
+        log.info("Load Balancer Shutdown");
         UnicastRemoteObject.unexportObject(this, true);
-        System.out.println(Arrays.toString(registry.list()));
         //System.exit(0);
     }
 
