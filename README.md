@@ -73,5 +73,7 @@ Das ausführen von Tasks und das Balancing hat danach bereits ausgezeichnet funk
 
 Nachdem ich für die ArrayList eine ThreadSafe liste verwendet habe, und die register/unregister Methode synchronized habe, hat dann alles funktioniert. Am Ende habe ich noch mittels System.in (build.gradle) einen exit command eingebaut, mit welchem man ganz einfach die einzelnen Server & den LoadBalancer herunterfahren kann.
 
+Dann habe ich EK begonnen. Da ich bereits im vorhinein daran gedacht habe, dass man verschiedene Balancing Strategien verwenden könnte, habe ich diese mittels StrategyPattern implementiert. Dementsprechend ist es realtiv einfach gewesen, unterschiedliche Methoden zu implementieren.
+
 ## Quellen
 [1] "Fibonacci Number Program"; wikibooks; zuletzt besucht am 21.03.2022; https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Fibonacci_Number_Program
