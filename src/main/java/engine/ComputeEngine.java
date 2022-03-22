@@ -90,4 +90,9 @@ public class ComputeEngine implements Compute, Serializable {
         balance.unregister(this.realName);
         UnicastRemoteObject.unexportObject(this, true);
     }
+
+    @Override
+    public long ping() throws RemoteException {
+        return System.currentTimeMillis();
+    }
 }

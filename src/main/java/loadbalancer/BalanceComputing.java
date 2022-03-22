@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -63,8 +62,23 @@ public class BalanceComputing implements Balance {
 
     @Override
     public <T> T executeTask(Task<T> t) throws RemoteException {
+        if (servers.isEmpty()) {
+            System.err.println("No Servers online.");
+            return null;
+        }
         Compute ce = balancerMethod.getExecutionServer(servers);
         System.out.println("Executing Task on " + servers.indexOf(ce));
+        try {
+            ce.ping();
+        } catch (RemoteException ex) {
+            System.out.println("Ping hat nicht geantwortet.");
+            servers.remove(ce);
+            if (servers.isEmpty()) {
+                System.err.println("No Servers online.");
+                return null;
+            }
+            ce = balancerMethod.getExecutionServer(servers);
+        }
         return ce.executeTask(t);
     }
 
@@ -77,5 +91,10 @@ public class BalanceComputing implements Balance {
         System.out.println("Load Balancer Shutdown");
         UnicastRemoteObject.unexportObject(this, true);
         //System.exit(0);
+    }
+
+    @Override
+    public long ping() throws RemoteException {
+        return System.currentTimeMillis();
     }
 }

@@ -31,13 +31,12 @@
 
 package client;
 
-import java.rmi.NotBoundException;
+import compute.Compute;
+
+import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.math.BigDecimal;
-
-import compute.Compute;
 
 public class ComputeTasks {
     private static Compute comp;
@@ -51,15 +50,20 @@ public class ComputeTasks {
             String name = "Compute";
             Registry registry = LocateRegistry.getRegistry(args[0]);
             comp = (Compute) registry.lookup(name);
+            try {
+                comp.ping();
+            } catch (RemoteException ex) {
+                throw new RemoteException("No Loadbalancer Online.");
+            }
 
             Pi task = new Pi(Integer.parseInt(args[1]));
             BigDecimal pi = comp.executeTask(task);
-            System.out.println(pi);
+            System.out.println(pi == null ? "No Servers were online." : pi);
 
             Fibonacci task2 = new Fibonacci(Integer.parseInt(args[1]));
             Long fibonacci = comp.executeTask(task2);
-            System.out.println(fibonacci);
-            comp.shutdownEngine();
+            System.out.println(fibonacci == null ? "No Servers were online." : fibonacci);
+            //comp.shutdownEngine();
         } catch (Exception e) {
             System.err.println("ComputeTasks exception:");
             e.printStackTrace();

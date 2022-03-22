@@ -38,4 +38,5 @@ import java.rmi.RemoteException;
 public interface Compute extends Remote {
     <T> T executeTask(Task<T> t) throws RemoteException;
     void shutdownEngine() throws NotBoundException, RemoteException;
+    long ping() throws RemoteException;
 }
