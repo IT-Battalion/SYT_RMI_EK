@@ -39,7 +39,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ComputeTasks {
-    private static Compute comp;
 
     public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
@@ -49,7 +48,7 @@ public class ComputeTasks {
             // Hier ist was ganz wichtiges
             String name = "Compute";
             Registry registry = LocateRegistry.getRegistry(args[0]);
-            comp = (Compute) registry.lookup(name);
+            Compute comp = (Compute) registry.lookup(name);
             try {
                 comp.ping();
             } catch (RemoteException ex) {

@@ -3,6 +3,7 @@ package loadbalancer;
 import compute.Balance;
 import compute.Compute;
 import compute.Task;
+import engine.ComputeEngine;
 import loadbalancer.balance.BalanceMethod;
 import loadbalancer.balance.RoundRobin;
 
@@ -13,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -58,6 +60,7 @@ public class BalanceComputing implements Balance {
         if (servers.contains(comp)) {
             System.out.println("Unregister Engine: " + (servers.size() - 1));
             servers.remove(comp);
+            registry.unbind(engine);
         } else {
             System.err.println("Engine not contained in Registered Servers.");
         }
@@ -75,7 +78,11 @@ public class BalanceComputing implements Balance {
             ce.ping();
         } catch (RemoteException ex) {
             System.out.println("Ping hat nicht geantwortet.");
-            servers.remove(ce);
+            try {
+                unregister(((ComputeEngine)ce).getRealName());
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            }
             if (servers.isEmpty()) {
                 System.err.println("No Servers online.");
                 return null;
@@ -93,6 +100,7 @@ public class BalanceComputing implements Balance {
         }
         System.out.println("Load Balancer Shutdown");
         UnicastRemoteObject.unexportObject(this, true);
+        System.out.println(Arrays.toString(registry.list()));
         //System.exit(0);
     }
 

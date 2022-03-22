@@ -98,4 +98,8 @@ public class ComputeEngine implements Compute, Serializable {
     public long ping() throws RemoteException {
         return System.currentTimeMillis();
     }
+
+    public String getRealName() {
+        return realName;
+    }
 }
