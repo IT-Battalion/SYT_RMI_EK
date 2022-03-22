@@ -38,7 +38,10 @@ ist.
 [2]
 
 ## Was wird in der Registry gespeichert?
-Laut interface definition wird nur der Port gespeichert. Der hostname wird bei den jewiligen Methode mit übergeben.
+RMI registry is a namespace on which all server objects are placed. Each time the server creates an object, it registers this object with the RMIregistry (using bind() or reBind() methods). These are registered using a unique name known as bind name.
+
+To invoke a remote object, the client needs a reference of that object. At that time, the client fetches the object from the registry using its bind name (using lookup() method).
+[3]
 
 ## Wie kommt das Remote-Interface zum Einsatz? Was ist bei der Definition von Methoden zu beachten?
 The Remote interface serves to identify interfaces whose methods may be invoked from a non-local virtual machine. Any object that is a remote object must directly or indirectly implement this interface. Only those methods specified in a "remote interface", an interface that extends java.rmi.Remote are available remotely.
