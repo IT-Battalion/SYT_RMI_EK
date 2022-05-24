@@ -10,7 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -40,15 +42,20 @@ public class BalanceComputing implements Balance {
             Compute stub = (Compute) UnicastRemoteObject.exportObject(balancer, 0);
             registry = LocateRegistry.createRegistry(1099);
             registry.rebind(name, stub);
-            log.info("LoadBalancer bound");
+            log.info("LoadBalancer bound");;
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             while (!reader.readLine().equalsIgnoreCase("exit")) {
             }
             balancer.shutdownEngine();
-        } catch (Exception e) {
-            log.error("LoadBalancer exception:");
-            e.printStackTrace();
+        } catch (AccessException e) {
+            log.error("Operation is not permitted.");
+        } catch (NotBoundException e) {
+            log.error("The Name is currently not bound.");
+        } catch (RemoteException e) {
+            log.error("Registry Reference could not be created.");
+        } catch (IOException e) {
+            log.error("Reading Input failed", e);
         }
     }
 
@@ -66,7 +73,7 @@ public class BalanceComputing implements Balance {
             servers.remove(comp);
             registry.unbind(engine);
         } else {
-            System.err.println("Engine not contained in Registered Servers.");
+            log.warn("Engine not contained in Registered Servers.");
         }
     }
 

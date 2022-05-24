@@ -36,14 +36,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ComputeTasks {
-    public static Logger log = LogManager.getLogger(ComputeTasks.class);
+    private static final Logger log = LogManager.getLogger(ComputeTasks.class);
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
+        log.info("test");
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
@@ -55,7 +58,7 @@ public class ComputeTasks {
             try {
                 comp.ping();
             } catch (RemoteException ex) {
-                throw new RemoteException("No Loadbalancer Online.");
+                log.error("No Loadbalancer Online.");
             }
 
             Pi task = new Pi(Integer.parseInt(args[1]));
@@ -66,9 +69,12 @@ public class ComputeTasks {
             Long fibonacci = comp.executeTask(task2);
             log.info(fibonacci == null ? "No Servers were online." : fibonacci);
             //comp.shutdownEngine();
-        } catch (Exception e) {
-            log.error("ComputeTasks exception:");
-            e.printStackTrace();
+        } catch (AccessException e) {
+            log.error("Operation is not permitted.");
+        } catch (NotBoundException e) {
+            log.error("The Name is currently not bound.");
+        } catch (RemoteException e) {
+            log.error("Registry Reference could not be created.");
         }
     }
 }

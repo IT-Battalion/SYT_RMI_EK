@@ -38,8 +38,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -47,7 +49,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ComputeEngine implements Compute, Serializable {
-
+    private static final Logger log = LogManager.getLogger(ComputeEngine.class);
     private static Registry registry;
     private static Balance balance;
 
@@ -60,11 +62,9 @@ public class ComputeEngine implements Compute, Serializable {
 
     @Override
     public <T> T executeTask(Task<T> t) {
-        System.out.println("Executing Task");
+        log.info("Executing Task");
         return t.execute();
     }
-
-    public static Logger log = LogManager.getLogger(ComputeEngine.class);
 
     public static void main(String[] args) {
         if (System.getSecurityManager() == null) {
@@ -85,9 +85,14 @@ public class ComputeEngine implements Compute, Serializable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             while (!reader.readLine().equalsIgnoreCase("exit")) {}
             engine.shutdownEngine();
-        } catch (Exception e) {
-            log.error("ComputeEngine exception:");
-            e.printStackTrace();
+        } catch (AccessException e) {
+            log.error("Operation is not permitted.");
+        } catch (NotBoundException e) {
+            log.error("The Name is currently not bound.");
+        } catch (RemoteException e) {
+            log.error("Registry Reference could not be created.");
+        } catch (IOException e) {
+            log.error("Reading Input failed", e);
         }
     }
 
