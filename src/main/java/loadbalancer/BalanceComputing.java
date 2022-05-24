@@ -6,8 +6,8 @@ import compute.Task;
 import engine.ComputeEngine;
 import loadbalancer.balance.BalanceMethod;
 import loadbalancer.balance.RoundRobin;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class BalanceComputing implements Balance {
         super();
     }
 
-    public static Logger log = LogManager.getLogger(BalanceComputing.class);
+    public static Logger log = LoggerFactory.getLogger(BalanceComputing.class);
 
     public static void main(String[] args) {
         if (System.getSecurityManager() == null) {

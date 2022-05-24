@@ -32,9 +32,8 @@
 package client;
 
 import compute.Compute;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.rmi.AccessException;
@@ -44,10 +43,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ComputeTasks {
-    private static final Logger log = LogManager.getLogger(ComputeTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(ComputeTasks.class);
 
     public static void main(String[] args) {
-        log.info("test");
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
@@ -64,11 +62,11 @@ public class ComputeTasks {
 
             Pi task = new Pi(Integer.parseInt(args[1]));
             BigDecimal pi = comp.executeTask(task);
-            log.info(pi == null ? "No Servers were online." : pi);
+            log.info(pi == null ? "No Servers were online." : String.valueOf(pi));
 
             Fibonacci task2 = new Fibonacci(Integer.parseInt(args[1]));
             BigInteger fibonacci = comp.executeTask(task2);
-            log.info(fibonacci == null ? "No Servers were online." : fibonacci);
+            log.info(fibonacci == null ? "No Servers were online." : String.valueOf(fibonacci));
             //comp.shutdownEngine();
         } catch (AccessException e) {
             log.error("Operation is not permitted.");

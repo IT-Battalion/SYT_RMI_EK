@@ -34,8 +34,8 @@ package engine;
 import compute.Balance;
 import compute.Compute;
 import compute.Task;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,7 +49,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ComputeEngine implements Compute, Serializable {
-    private static final Logger log = LogManager.getLogger(ComputeEngine.class);
+    private static final Logger log = LoggerFactory.getLogger(ComputeEngine.class);
     private static Registry registry;
     private static Balance balance;
 
