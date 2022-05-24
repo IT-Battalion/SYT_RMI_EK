@@ -56,7 +56,13 @@ public class TestPermissions {
   }
 }
 ```
-Da es zuerst nicht funktioniert hat, habe ich eine neue Security Policy angelegt. Danach hat alles einwandfrei funktioniert.
+Da es zuerst nicht funktioniert hat, habe ich eine neue Security Policy angelegt. Danach hat alles einwandfrei funktioniert. Die Policy habe ich im `/Users/pelias/.java.policy` Directory angelegt mit folgendem Inhalt.
+
+```shell
+grant codeBase "file:/Users/pelias/Documents/8.SEM/SYT/BORM/-" {
+    permission java.security.AllPermission;
+ };
+```
 
 Anschließend habe ich die Klasse ComputePi in ComputeTasks umbenannt. Daher musste auch in der build.gradle der compute Tasks geändert werden, was ich zuerster vergessen habe. 
 Danach habe ich das Program getestet und es ist problemlos gelaufen.
