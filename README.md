@@ -81,5 +81,7 @@ Nachdem ich für die ArrayList eine ThreadSafe liste verwendet habe, und die reg
 
 Dann habe ich EK begonnen. Da ich bereits im vorhinein daran gedacht habe, dass man verschiedene Balancing Strategien verwenden könnte, habe ich diese mittels StrategyPattern implementiert. Dementsprechend ist es realtiv einfach gewesen, unterschiedliche Methoden zu implementieren.
 
+Zum ausführen muss zuerst der Balancer mittels `gradle balance` gestartet werden. Anschließend können die Server verbuden werden. Dafür verwendet man folgenden Befehl: `gradle engine --args="localhost 1097"`. Das erste Argument ist dabei der Hostname und der zweite der Port. Zuletzt kann man dann einen Client mittels `gradle compute --args="localhost 1234"` starten. Das erste Argument ist auch hier wieder der Hostname und das zweite die Anazahl an Stellen die bei enweder Pi oder Fibonacci berechnet werden sollen.
+
 ## Quellen
 [1] "Fibonacci Number Program"; wikibooks; zuletzt besucht am 21.03.2022; https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Fibonacci_Number_Program
