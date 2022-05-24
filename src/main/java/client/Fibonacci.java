@@ -3,9 +3,9 @@ package client;
 import compute.Task;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
-public class Fibonacci implements Task<Long>, Serializable
-{
+public class Fibonacci implements Task<BigInteger>, Serializable {
     private final int n;
 
     public Fibonacci(int n) {
@@ -13,19 +13,26 @@ public class Fibonacci implements Task<Long>, Serializable
     }
 
     @Override
-    public Long execute() {
+    public BigInteger execute() {
         return computeFibonacci(this.n);
     }
 
-    public static Long computeFibonacci(int n) {
-        long n2 = 0;
-        long n1 = 1;
-        long tmp;
-        for (int i = n; i >= 2; i--) {
-            tmp = n2;
-            n2 = n1;
-            n1 = n1 + tmp;
+    public static BigInteger computeFibonacci(int n) {
+        BigInteger prepre = new BigInteger("0");
+        BigInteger pre = new BigInteger("1");
+        BigInteger out = new BigInteger("1");
+
+        if (n >= 2) {
+            for (int i = 3; i <= n; i++) {
+                prepre = pre;
+                pre = out;
+                out = prepre.add(pre);
+            }
+            return out;
+        } else if (n >= 0) {
+            return BigInteger.valueOf(n);
+        } else {
+            return prepre;
         }
-        return n2 + n1;
     }
 }

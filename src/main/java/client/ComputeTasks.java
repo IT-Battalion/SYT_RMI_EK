@@ -36,6 +36,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -66,7 +67,7 @@ public class ComputeTasks {
             log.info(pi == null ? "No Servers were online." : pi);
 
             Fibonacci task2 = new Fibonacci(Integer.parseInt(args[1]));
-            Long fibonacci = comp.executeTask(task2);
+            BigInteger fibonacci = comp.executeTask(task2);
             log.info(fibonacci == null ? "No Servers were online." : fibonacci);
             //comp.shutdownEngine();
         } catch (AccessException e) {
